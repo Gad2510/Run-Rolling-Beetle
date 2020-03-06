@@ -7,7 +7,7 @@ public class prueba : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("hola");
+        Debug.Log("hola2");
     }
 
     // Update is called once per frame
