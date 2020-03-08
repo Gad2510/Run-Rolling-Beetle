@@ -4,21 +4,39 @@ using UnityEngine;
 
 public class Personaje : MonoBehaviour
 {
-    public Rigidbody rigi;
-    public float movementSpeed;
-    public float rotationSpeed;
-    public GameObject poop;
-    public bool canHold;
+    Rigidbody rigi;
+    Rigidbody poopRigid;
+
+    [SerializeField]
+    float movementSpeed, rotationSpeed;    
+    bool canHold, isMoving;
+
+    public bool IsMoving
+    {
+        get { return isMoving; }
+    }
+
+    public bool CanHold
+    {
+        get { return canHold; }
+    }
 
     void Start()
     {
+        poopRigid = transform.GetChild(1).GetComponent<Rigidbody>();
         rigi = GetComponent<Rigidbody>();
         canHold = false;
+        isMoving = false;
     }
     void Update()
     {
-        transform.Rotate(0, Input.GetAxis("Horizontal") * Time.deltaTime * rotationSpeed, 0);
-        transform.Translate(0, 0, Input.GetAxis("Vertical") * Time.deltaTime * movementSpeed);
+        float x = Input.GetAxis("Horizontal");
+        float y = Input.GetAxis("Vertical");
+        transform.Rotate(0, x * Time.deltaTime * rotationSpeed, 0);
+        transform.Translate(0, 0,  y* Time.deltaTime * movementSpeed);
+
+        isMoving = (!poopRigid.IsSleeping())&& y>0.1f;
+
         if (Input.GetKeyDown(KeyCode.Space) && !canHold)
         {
             ShootPoop();
@@ -26,10 +44,9 @@ public class Personaje : MonoBehaviour
     }
     void ShootPoop()
     {
-        //poop.transform.Translate();
-        transform.GetChild(1).parent = null;
+        poopRigid.transform.parent = null;
        
-        poop.GetComponent<Rigidbody>().velocity = transform.forward * 10;
+        poopRigid.velocity = transform.forward * 10;
         canHold = true;
     }
     void OnCollisionEnter(Collision collision)
@@ -38,7 +55,7 @@ public class Personaje : MonoBehaviour
         {
             if (canHold)
             {
-                poop.gameObject.GetComponent<Transform>().SetParent(transform);
+                poopRigid.transform.SetParent(transform);
                 canHold = false;
             }
         }
