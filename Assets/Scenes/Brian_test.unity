@@ -845,7 +845,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CacaPorcentage: {fileID: 353346865}
-  scaleIncrement: 0.5
+  scaleIncrement: 0.2
   maxScale: 3
   playerForward: {fileID: 55276138}
 --- !u!54 &1877711354
