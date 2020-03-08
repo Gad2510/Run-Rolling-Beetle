@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Personaje : MonoBehaviour
 {
+    Animator animBeetle;
     Rigidbody rigi;
-    Rigidbody poopRigid;
+    public Rigidbody poopRigid;
 
     [SerializeField]
     float movementSpeed, rotationSpeed;    
@@ -23,7 +24,8 @@ public class Personaje : MonoBehaviour
 
     void Start()
     {
-        poopRigid = transform.GetChild(1).GetComponent<Rigidbody>();
+        animBeetle = GetComponent<Animator>();
+
         rigi = GetComponent<Rigidbody>();
         canHold = false;
         isMoving = false;
@@ -34,15 +36,22 @@ public class Personaje : MonoBehaviour
         float y = Input.GetAxis("Vertical");
         transform.Rotate(0, x * Time.deltaTime * rotationSpeed, 0);
         transform.Translate(0, 0,  y* Time.deltaTime * movementSpeed);
-
-        isMoving = (!poopRigid.IsSleeping())&& y>0.1f;
+        float tringulate = Mathf.Sqrt(Mathf.Pow(x, 2) + Mathf.Pow(y, 2));
+        isMoving = (!poopRigid.IsSleeping())&& tringulate>0.1f;
+        animBeetle.SetBool("isWalking", tringulate > 0.1f);
 
         if (Input.GetKeyDown(KeyCode.Space) && !canHold)
         {
-            ShootPoop();
+            animBeetle.SetTrigger("shoot");
+            //ShootPoop();
+        }
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            animBeetle.SetTrigger("dead");
         }
     }
-    void ShootPoop()
+    public void ShootPoop()
     {
         poopRigid.transform.parent = null;
        
@@ -55,6 +64,7 @@ public class Personaje : MonoBehaviour
         {
             if (canHold)
             {
+                animBeetle.SetTrigger("holding");
                 poopRigid.transform.SetParent(transform);
                 canHold = false;
             }
