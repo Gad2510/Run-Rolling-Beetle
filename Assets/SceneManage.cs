@@ -28,6 +28,11 @@ public class SceneManage : MonoBehaviour
       {
         SceneManager.LoadScene(options);
       }
+     
+       public  void ChargeMenu(string Menu)
+    {
+        SceneManager.LoadScene (Menu);
+    }
     
 
 }
